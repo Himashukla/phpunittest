@@ -12,9 +12,20 @@ class TaskController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
+    public $task;
+    /**
+     * Create the event listener.
+     *
+     * @return void
+     */
+    public function __construct(Task $task) {
+        $this->task = $task;
+    }
     public function index()
     {
-        //
+        //dd($this->task);
+        $this->task->get()->first(); 
+               
     }
 
     /**
@@ -87,7 +98,7 @@ class TaskController extends Controller
         ], 410);
     }
 
-    public function mark_task_as_completed(Task $task)
+    public function mark_task_completed(Task $task)
     {
         $task->mark_task_as_completed(); //calls the mark_task_as_complete method we created in the App/Models/Task.php file
         return response()->json([
