@@ -40,13 +40,15 @@ class BasicTest extends TestCase
 
         $this->queryBuilder = $this->getMockBuilder(QueryBuilder::class)
             ->disableOriginalConstructor()
-            ->onlyMethods(['select', 'get', 'first'])
+            ->onlyMethods(['select', 'get', 'first','where'])
             ->getMock();
         
         $this->tasks = $this->getMockBuilder(Task::class)
         ->disableOriginalConstructor()
-        ->addMethods(['get'])
+        ->addMethods(['get','where','first'])
         ->getMock();
+
+        $this->tasks->id = 1;
 
     }
 
@@ -81,6 +83,24 @@ class BasicTest extends TestCase
         $index = new TaskController($this->tasks);
 
         $index->index();
+    }
+
+    public function testShowMethod(){        
+
+        //dd($this->tasks);
+        
+        $this->queryBuilder->expects($this->once())
+            ->method('where')
+            ->with($this->tasks->id)
+            ->willReturn($this->queryBuilder);
+
+        $this->queryBuilder->expects($this->once())
+            ->method('first')
+            ->willReturn($this->getTasks());
+            
+        $index = new TaskController($this->tasks);
+        //dd($this->tasks);
+        $index->show($this->tasks);
     }
 
     public function getTasks()

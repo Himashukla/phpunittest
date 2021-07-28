@@ -57,7 +57,7 @@ class TaskController extends Controller
      */
     public function show(Task $task)
     {
-        //
+        Task::where('id',$task->id)->first();
     }
 
     /**
